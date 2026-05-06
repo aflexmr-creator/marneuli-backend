@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Marneuli Store</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color:#f1f5f9; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding:20px;
+            min-height:100vh;
+        }
+        .container { max-width:1400px; margin:0 auto; }
+        .header { 
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding:25px 30px; 
+            border-radius:16px; 
+            margin-bottom:25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border:1px solid #3b4252;
+        }
+        .header h1 { 
+            font-size:28px; 
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom:8px;
+        }
+        .stats { 
+            display:grid; 
+            grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); 
+            gap:20px; 
+            margin-bottom:30px; 
+        }
+        .stat { 
+            background: linear-gradient(135deg, #1e293b 0%, #2d3748 100%);
+            padding:25px; 
+            border-radius:16px; 
+            text-align:center;
+            border:1px solid #3b4252;
+            transition:0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .stat:hover { transform:translateY(-5px); box-shadow: 0 8px 25px rgba(59,130,246,0.3); }
+        .stat-icon { font-size:40px; margin-bottom:10px; }
+        .stat-number { 
+            font-size:36px; 
+            font-weight:bold; 
+            margin-bottom:5px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color:#94a3b8; font-size:13px; text-transform:uppercase; letter-spacing:1px; }
+        
+        .ilan-card { 
+            background: linear-gradient(135deg, #1e293b 0%, #2d3748 100%);
+            border:1px solid #3b4252; 
+            padding:20px; 
+            border-radius:16px; 
+            margin:15px 0;
+            transition:0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .ilan-card:hover { 
+            transform:translateX(5px); 
+            border-color:#3b82f6;
+            box-shadow: 0 8px 25px rgba(59,130,246,0.2);
+        }
+        .ilan-bekliyor { border-left:5px solid #f59e0b; }
+        .ilan-onayli { border-left:5px solid #10b981; }
+        .ilan-one-cikan { 
+            border:2px solid #fbbf24 !important;
+            box-shadow: 0 0 30px rgba(251,191,36,0.3);
+        }
+        
+        .ilan-header { 
+            display:flex; 
+            justify-content:space-between; 
+            align-items:flex-start;
+            margin-bottom:15px;
+            flex-wrap:wrap;
+            gap:15px;
+        }
+        .ilan-info h3 { 
+            font-size:18px; 
+            margin-bottom:8px;
+            color:#f1f5f9;
+        }
+        .ilan-meta { 
+            display:flex; 
+            gap:15px; 
+            color:#64748b; 
+            font-size:13px;
+            flex-wrap:wrap;
+        }
+        .badge { 
+            padding:5px 12px; 
+            border-radius:20px; 
+            font-size:11px; 
+            font-weight:bold;
+            display:inline-block;
+            margin-left:10px;
+        }
+        .badge-bekliyor { 
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color:#000;
+            animation:pulse 2s infinite;
+        }
+        .badge-one { 
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color:#000;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity:1; }
+            50% { opacity:0.7; }
+        }
+        
+        .btn-group { display:flex; gap:10px; flex-wrap:wrap; }
+        .btn { 
+            padding:10px 20px; 
+            border:none; 
+            border-radius:10px; 
+            cursor:pointer; 
+            font-weight:bold;
+            font-size:14px;
+            transition:0.3s;
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+        .btn:hover { transform:scale(1.05); }
+        .btn:active { transform:scale(0.95); }
+        
+        .btn-onay { 
+            background: linear-gradient(135deg, #10b981, #059669);
+            color:white;
+            box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+        }
+        .btn-onay:hover { box-shadow: 0 6px 20px rgba(16,185,129,0.6); }
+        
+        .btn-one { 
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color:#000;
+            box-shadow: 0 4px 15px rgba(251,191,36,0.4);
+        }
+        .btn-one:hover { box-shadow: 0 6px 20px rgba(251,191,36,0.6); }
+        
+        .btn-sil { 
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color:white;
+            box-shadow: 0 4px 15px rgba(239,68,68,0.4);
+        }
+        .btn-sil:hover { box-shadow: 0 6px 20px rgba(239,68,68,0.6); }
+        
+        .empty { 
+            text-align:center; 
+            padding:60px 20px; 
+            color:#64748b;
+            background:#1e293b;
+            border-radius:16px;
+        }
+        .loading { text-align:center; padding:40px; color:#3b82f6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Admin Panel - Marneuli Store</h1>
+            <p style="color:#94a3b8; margin-top:10px;">
+                Hoşgeldin, <strong style="color:#3b82f6;">aflex-0911</strong> | 
+                <a href="/" style="color:#8b5cf6; text-decoration:none;">← Siteye Dön</a>
+            </p>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-number" id="bekleyenSayi">0</div>
+                <div class="stat-label">Onay Bekliyor</div>
+            </div>
+            <div class="stat">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number" id="onayliSayi">0</div>
+                <div class="stat-label">Yayında</div>
+            </div>
+            <div class="stat">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-number" id="oneCikanSayi">0</div>
+                <div class="stat-label">Öne Çıkan</div>
+            </div>
+        </div>
+
+        <div id="ilanListesi" class="loading">⏳ Yükleniyor...</div>
+    </div>
+
+    <script>
+        const API = 'https://marneuli-backend.onrender.com';
+        const ADMIN_ADI = 'aflex-0911';
+
+        const user = JSON.parse(localStorage.getItem('kullanici') || '{}');
+        if (user.adSoyad !== ADMIN_ADI) {
+            alert('⛔ Bu sayfaya erişim yetkiniz yok!');
+            window.location.href = '/';
+        }
+
+        async function ilanlariYukle() {
+            try {
+                const res = await fetch(`${API}/api/ilanlar`);
+                const ilanlar = await res.json();
+                
+                const bekleyen = ilanlar.filter(i => !i.onayli).length;
+                const onayli = ilanlar.filter(i => i.onayli).length;
+                const oneCikan = ilanlar.filter(i => i.oneCikan).length;
+                
+                document.getElementById('bekleyenSayi').textContent = bekleyen;
+                document.getElementById('onayliSayi').textContent = onayli;
+                document.getElementById('oneCikanSayi').textContent = oneCikan;
+                
+                const sirali = [...ilanlar].sort((a,b) => {
+                    if (a.onayli !== b.onayli) return a.onayli ? 1 : -1;
+                    return b.id - a.id;
+                });
+                
+                document.getElementById('ilanListesi').innerHTML = sirali.length ? sirali.map(ilan => `
+                    <div class="ilan-card ${ilan.onayli ? 'ilan-onayli' : 'ilan-bekliyor'} ${ilan.oneCikan ? 'ilan-one-cikan' : ''}">
+                        <div class="ilan-header">
+                            <div class="ilan-info">
+                                <h3>
+                                    ${ilan.baslik} - ${ilan.fiyat} ₾
+                                    ${!ilan.onayli ? '<span class="badge badge-bekliyor">🔥 ONAY BEKLİYOR</span>' : ''}
+                                    ${ilan.oneCikan ? '<span class="badge badge-one">⭐ ÖNE ÇIKAN</span>' : ''}
+                                </h3>
+                                <div class="ilan-meta">
+                                    <span>📁 ${ilan.kategori}</span>
+                                    <span>📞 ${ilan.telefon}</span>
+                                    <span>📅 ${ilan.tarih}</span>
+                                    <span>🆔 ID: ${ilan.id}</span>
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                ${!ilan.onayli ? `
+                                    <button class="btn btn-onay" onclick="onayla(${ilan.id})">
+                                        ✓ Onayla & Yayınla
+                                    </button>
+                                ` : ''}
+                                ${ilan.onayli && !ilan.oneCikan ? `
+                                    <button class="btn btn-one" onclick="oneCikar(${ilan.id})">
+                                        ⭐ Öne Çıkar
+                                    </button>
+                                ` : ''}
+                                <button class="btn btn-sil" onclick="sil(${ilan.id})">
+                                    🗑️ Sil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') : '<div class="empty"><h3>📭 Henüz ilan yok</h3><p style="margin-top:10px;">Yeni ilanlar burada görünecek</p></div>';
+            } catch(err) {
+                document.getElementById('ilanListesi').innerHTML = '<div class="empty">❌ İlanlar yüklenemedi</div>';
+            }
+        }
+
+        async function onayla(id) {
+            if (!confirm('✅ Bu ilanı onaylayıp yayına almak istediğine emin misin?')) return;
+            await fetch(`${API}/api/ilanlar/${id}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({onayli: true})
+            });
+            alert('🎉 İlan onaylandı ve yayına alındı!');
+            ilanlariYukle();
+        }
+
+        async function oneCikar(id) {
+            if (!confirm('⭐ Bu ilanı öne çıkarmak istediğine emin misin?')) return;
+            await fetch(`${API}/api/ilanlar/${id}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({oneCikan: true})
+            });
+            alert('🌟 İlan öne çıkarıldı!');
+            ilanlariYukle();
+        }
+
+        async function sil(id) {
+            if (!confirm('🗑️ İlanı kalıcı olarak silmek istediğine emin misin?')) return;
+            await fetch(`${API}/api/ilanlar/${id}`, {method: 'DELETE'});
+            alert('🗑️ İlan silindi!');
+            ilanlariYukle();
+        }
+
+        ilanlariYukle();
+        setInterval(ilanlariYukle, 30000); // 30 saniyede bir otomatik yenile
+    </script>
+</body>
+</html>
