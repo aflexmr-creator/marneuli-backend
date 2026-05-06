@@ -7,308 +7,340 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background: #0f0c29;
-            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
-            min-height: 100vh;
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0a0e27;
             color: white;
+            min-height: 100vh;
         }
-        
-        /* HEADER */
-        .header {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+      .navbar {
+            background: #0f172a;
             padding: 20px 5%;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
+            border-bottom: 1px solid #1e293b;
         }
-        .logo {
+      .logo {
             font-size: 28px;
-            font-weight: 900;
-            background: linear-gradient(90deg, #7c3aed, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            color: #3b82f6;
         }
-        .nav-actions {
+      .nav-buttons {
             display: flex;
-            gap: 15px;
-            align-items: center;
+            gap: 12px;
         }
-        .btn-gradient {
-            background: linear-gradient(90deg, #7c3aed, #3b82f6);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
+      .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
             transition: 0.3s;
             border: none;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .btn-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
-        }
-
-        /* HERO + SEARCH */
-        .hero {
-            text-align: center;
-            padding: 60px 20px 40px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .hero h2 {
-            font-size: 42px;
-            margin-bottom: 15px;
-            background: linear-gradient(90deg, #fff, #a5b4fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .search-box {
-            position: relative;
-            max-width: 600px;
-            margin: 30px auto;
-        }
-        .search-box input {
-            width: 100%;
-            padding: 18px 50px 18px 20px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 15px;
+      .btn-primary {
+            background: #3b82f6;
             color: white;
-            font-size: 16px;
-            backdrop-filter: blur(10px);
         }
-        .search-box input::placeholder { color: #aaa; }
-        .search-box i {
+      .btn-secondary {
+            background: #1e293b;
+            color: white;
+        }
+      .btn:hover { opacity: 0.8; }
+      
+      .search-container {
+            max-width: 600px;
+            margin: 40px auto 30px;
+            position: relative;
+        }
+      .search-box {
+            width: 100%;
+            padding: 16px 50px 16px 20px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+        }
+      .search-box:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+      .search-icon {
             position: absolute;
-            right: 20px;
+            right: 18px;
             top: 50%;
             transform: translateY(-50%);
-            color: #7c3aed;
+            color: #64748b;
         }
-
-        /* KATEGORİ FİLTRE */
-        .categories {
+        
+      .filter-tabs {
             display: flex;
-            gap: 12px;
             justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
             flex-wrap: wrap;
-            padding: 0 20px 40px;
+            padding: 0 20px;
         }
-        .cat-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 25px;
-            color: #ccc;
+      .tab {
+            padding: 10px 24px;
+            background: #1e293b;
+            border: none;
+            border-radius: 20px;
+            color: #94a3b8;
             cursor: pointer;
+            font-size: 14px;
             transition: 0.3s;
         }
-        .cat-btn.active, .cat-btn:hover {
-            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+      .tab.active {
+            background: #3b82f6;
             color: white;
-            border-color: transparent;
         }
-
-        /* İLAN GRID */
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 5% 60px; }
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-            gap: 25px; 
+      .tab:hover {
+            background: #334155;
         }
-        .card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
+        
+      .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5% 50px;
+        }
+      .ilanlar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+      .ilan-card {
+            background: #1e293b;
+            border-radius: 16px;
             overflow: hidden;
-            backdrop-filter: blur(10px);
-            transition: 0.4s;
+            transition: 0.3s;
+            border: 1px solid #334155;
             cursor: pointer;
         }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.3);
-            border-color: rgba(124, 58, 237, 0.5);
+      .ilan-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
         }
-        .card-img {
+      .ilan-img {
             width: 100%;
             height: 220px;
             object-fit: cover;
-            background: linear-gradient(45deg, #1e1b4b, #312e81);
+            background: #0f172a;
         }
-        .card-body { padding: 20px; }
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
+      .ilan-body {
+            padding: 20px;
+        }
+      .ilan-kategori {
+            display: inline-block;
+            background: #3b82f6;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
             margin-bottom: 12px;
         }
-        .badge {
-            background: linear-gradient(90deg, #7c3aed, #3b82f6);
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .price {
-            font-size: 24px;
-            font-weight: 900;
-            background: linear-gradient(90deg, #34d399, #10b981);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .card h3 {
+      .ilan-baslik {
             font-size: 18px;
-            margin: 10px 0;
-            color: #f1f5f9;
+            font-weight: 600;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
-        .desc {
+      .ilan-fiyat {
+            font-size: 22px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+      .ilan-aciklama {
             color: #94a3b8;
             font-size: 14px;
-            line-height: 1.5;
-            height: 42px;
+            margin-bottom: 15px;
             overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
-        .card-footer {
+      .ilan-footer {
+            border-top: 1px solid #334155;
+            padding-top: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .user {
+            color: #64748b;
             font-size: 13px;
-            color: #cbd5e1;
         }
-        .empty {
+      .empty-state {
             text-align: center;
             padding: 80px 20px;
             color: #64748b;
-            font-size: 18px;
-            grid-column: 1 / -1;
         }
-        .loading {
+      .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+      .loading {
             text-align: center;
             padding: 60px;
-            font-size: 18px;
-            color: #7c3aed;
+            color: #64748b;
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="nav">
-            <div class="logo">Marneuli Store</div>
-            <div class="nav-actions">
-                <a href="giris.html" class="btn-gradient"><i class="fa-solid fa-user"></i> Giriş</a>
-                <a href="ilan-ekle.html" class="btn-gradient"><i class="fa-solid fa-plus"></i> İlan Ekle</a>
-            </div>
+    <nav class="navbar">
+        <div class="logo">Marneuli Store</div>
+        <div class="nav-buttons" id="navButtons">
+            <a href="giris.html" class="btn btn-secondary"><i class="fas fa-user"></i> Giriş</a>
+            <a href="ilan-ekle.html" class="btn btn-primary"><i class="fas fa-plus"></i> İlan Ekle</a>
         </div>
-    </header>
+    </nav>
 
-    <section class="hero">
-        <h2>Marneuli'nin En Büyük Pazarı</h2>
-        <p style="color: #94a3b8; font-size: 18px;">Binlerce ilan, en iyi fiyatlar</p>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="iPhone, Araba, Ev ara..." onkeyup="filtrele()">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </div>
-    </section>
+    <div class="search-container">
+        <input type="text" class="search-box" id="searchInput" placeholder="iPhone, Araba, Ev ara...">
+        <i class="fas fa-search search-icon"></i>
+    </div>
 
-    <div class="categories">
-        <button class="cat-btn active" onclick="kategoriFiltre('')">Tümü</button>
-        <button class="cat-btn" onclick="kategoriFiltre('Elektronik')">Elektronik</button>
-        <button class="cat-btn" onclick="kategoriFiltre('Araç')">Araç</button>
-        <button class="cat-btn" onclick="kategoriFiltre('Emlak')">Emlak</button>
-        <button class="cat-btn" onclick="kategoriFiltre('Ev Eşyası')">Ev Eşyası</button>
-        <button class="cat-btn" onclick="kategoriFiltre('Giyim')">Giyim</button>
-        <button class="cat-btn" onclick="kategoriFiltre('Diğer')">Diğer</button>
+    <div class="filter-tabs">
+        <button class="tab active" data-kategori="Tümü">Tümü</button>
+        <button class="tab" data-kategori="Elektronik">Elektronik</button>
+        <button class="tab" data-kategori="Araba">Araç</button>
+        <button class="tab" data-kategori="Emlak">Emlak</button>
+        <button class="tab" data-kategori="Ev Eşyası">Ev Eşyası</button>
+        <button class="tab" data-kategori="Giyim">Giyim</button>
+        <button class="tab" data-kategori="Diğer">Diğer</button>
     </div>
 
     <div class="container">
-        <div id="ilanlar" class="grid">
-            <div class="loading">İlanlar yükleniyor...</div>
+        <div class="ilanlar-grid" id="ilanlarGrid">
+            <div class="loading"><i class="fas fa-spinner fa-spin"></i> İlanlar yükleniyor...</div>
         </div>
     </div>
 
     <script>
         let tumIlanlar = [];
-        let aktifKategori = '';
+        let aktifKategori = 'Tümü';
+        let aramaMetni = '';
 
-        async function ilanlariGetir() {
-            try {
-                const res = await fetch('https://marneuli-backend.onrender.com/api/listings');
-                tumIlanlar = await res.json();
-                ilanlariGoster(tumIlanlar);
-            } catch (err) {
-                document.getElementById('ilanlar').innerHTML = '<div class="empty">Sunucu hatası! node server.js çalışıyor mu?</div>';
+        // Sayfa yüklenince çalış
+        window.onload = function() {
+            kullaniciKontrol();
+            ilanlariGetir();
+            eventListeners();
+        };
+
+        // Giriş yapılmış mı kontrol et
+        function kullaniciKontrol() {
+            const token = localStorage.getItem('token');
+            const navButtons = document.getElementById('navButtons');
+            
+            if (token) {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                navButtons.innerHTML = `
+                    <span style="color:#94a3b8;margin-right:10px;">
+                        <i class="fas fa-user"></i> ${user.adSoyad || 'Kullanıcı'}
+                    </span>
+                    <a href="ilan-ekle.html" class="btn btn-primary"><i class="fas fa-plus"></i> İlan Ekle</a>
+                    <button class="btn btn-secondary" onclick="cikisYap()"><i class="fas fa-sign-out-alt"></i></button>
+                `;
             }
         }
 
-        function ilanlariGoster(ilanlar) {
-            const container = document.getElementById('ilanlar');
+        function cikisYap() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            location.reload();
+        }
+
+        // Backend'den ilanları çek
+        async function ilanlariGetir() {
+            try {
+                const res = await fetch('https://marneuli-backend.onrender.com/api/ilanlar');
+                tumIlanlar = await res.json();
+                ilanlariGoster();
+            } catch (err) {
+                document.getElementById('ilanlarGrid').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Sunucuya bağlanılamadı. Backend uyuyor olabilir.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // İlanları filtrele ve göster
+        function ilanlariGoster() {
+            const grid = document.getElementById('ilanlarGrid');
             
-            if (ilanlar.length === 0) {
-                container.innerHTML = '<div class="empty"><i class="fa-solid fa-box-open" style="font-size:48px; margin-bottom:15px; display:block;"></i>Henüz ilan yok. İlk ilanı sen ekle!</div>';
+            // Filtreleme
+            let filtrelenmis = tumIlanlar;
+            
+            if (aktifKategori !== 'Tümü') {
+                filtrelenmis = filtrelenmis.filter(i => i.kategori === aktifKategori);
+            }
+            
+            if (aramaMetni) {
+                filtrelenmis = filtrelenmis.filter(i => 
+                    (i.baslik || '').toLowerCase().includes(aramaMetni.toLowerCase()) ||
+                    (i.aciklama || '').toLowerCase().includes(aramaMetni.toLowerCase())
+                );
+            }
+
+            if (filtrelenmis.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <i class="fas fa-inbox"></i>
+                        <p>İlan bulunamadı</p>
+                    </div>
+                `;
                 return;
             }
 
-            container.innerHTML = ilanlar.map(ilan => `
-                <div class="card">
-                    <img class="card-img" src="${ilan.imageUrl || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'}" alt="${ilan.title}">
-                    <div class="card-body">
-                        <div class="card-top">
-                            <span class="badge">${ilan.category}</span>
-                            <div class="price">$${ilan.price}</div>
-                        </div>
-                        <h3>${ilan.title}</h3>
-                        <p class="desc">${ilan.description || 'Açıklama eklenmemiş'}</p>
-                        <div class="card-footer">
-                            <span class="user"><i class="fa-solid fa-user"></i> ${ilan.userEmail}</span>
-                            <span style="color: #7c3aed;"><i class="fa-solid fa-eye"></i></span>
+            grid.innerHTML = filtrelenmis.map(ilan => `
+                <div class="ilan-card" onclick="window.location.href='ilan-detay.html?id=${ilan.id}'">
+                    <img src="${ilan.resim || 'https://via.placeholder.com/400x300?text=Resim+Yok'}" 
+                         class="ilan-img" 
+                         alt="${ilan.baslik || ''}"
+                         onerror="this.src='https://via.placeholder.com/400x300?text=Resim+Yok'">
+                    
+                    <div class="ilan-body">
+                        <span class="ilan-kategori">${ilan.kategori || 'Genel'}</span>
+                        <h3 class="ilan-baslik">${ilan.baslik || 'Başlıksız İlan'}</h3>
+                        <div class="ilan-fiyat">${ilan.fiyat ? ilan.fiyat + ' ₾' : 'Fiyat Belirtilmemiş'}</div>
+                        <p class="ilan-aciklama">${ilan.aciklama || 'Açıklama eklenmemiş'}</p>
+                        <div class="ilan-footer">
+                            <span><i class="fas fa-phone"></i> ${ilan.telefon || 'Telefon Yok'}</span>
+                            <span><i class="fas fa-calendar"></i> ${ilan.tarih || ''}</span>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function filtrele() {
-            const arama = document.getElementById('searchInput').value.toLowerCase();
-            let filtreli = tumIlanlar;
-            
-            if (aktifKategori) {
-                filtreli = filtreli.filter(i => i.category === aktifKategori);
-            }
-            if (arama) {
-                filtreli = filtreli.filter(i => 
-                    i.title.toLowerCase().includes(arama) || 
-                    i.description?.toLowerCase().includes(arama)
-                );
-            }
-            ilanlariGoster(filtreli);
-        }
+        // Event listeners
+        function eventListeners() {
+            // Kategori filtreleme
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    aktifKategori = this.dataset.kategori;
+                    ilanlariGoster();
+                });
+            });
 
-        function kategoriFiltre(kat) {
-            aktifKategori = kat;
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            filtrele();
+            // Arama
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                aramaMetni = e.target.value;
+                ilanlariGoster();
+            });
         }
-
-        ilanlariGetir();
     </script>
 </body>
 </html>

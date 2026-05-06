@@ -14,303 +14,266 @@
             color: white;
             padding: 20px;
         }
-       .header {
+      .header {
             max-width: 700px;
             margin: 0 auto 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-       .logo {
-            font-size: 24px;
-            font-weight: 900;
-            background: linear-gradient(90deg, #7c3aed, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
+      .header h1 {
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-       .btn-back {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+      .header a {
             color: white;
-            padding: 10px 18px;
-            border-radius: 10px;
             text-decoration: none;
-            font-weight: 600;
+            background: rgba(255,255,255,0.1);
+            padding: 12px 24px;
+            border-radius: 10px;
             transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-       .btn-back:hover { background: rgba(255,255,255,0.15); }
-       .container {
+      .header a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+      .container {
             max-width: 700px;
             margin: 0 auto;
             background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 40px;
             backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-       .title {
-            font-size: 32px;
-            font-weight: 900;
-            margin-bottom: 30px;
-            text-align: center;
-            background: linear-gradient(90deg, #fff, #a5b4fc);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
+      .form-group {
+            margin-bottom: 25px;
         }
-       .form-group { margin-bottom: 22px; }
-       .form-group label {
+        label {
             display: block;
-            margin-bottom: 8px;
-            color: #cbd5e1;
-            font-weight: 600;
+            margin-bottom: 10px;
+            color: #e0e0e0;
             font-size: 14px;
+            font-weight: 500;
         }
-        input, select, textarea {
+        label i {
+            margin-right: 8px;
+            color: #8b5cf6;
+        }
+        input, textarea, select {
             width: 100%;
-            padding: 15px 18px;
-            background: rgba(255,255,255,0.08);
+            padding: 14px;
+            background: rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 12px;
+            border-radius: 10px;
             color: white;
             font-size: 15px;
-            font-family: inherit;
-            transition: 0.3s;
         }
-        input::placeholder, textarea::placeholder { color: #94a3b8; }
-        input:focus, select:focus, textarea:focus {
+        input::placeholder, textarea::placeholder {
+            color: #888;
+        }
+        input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: #7c3aed;
-            background: rgba(255,255,255,0.1);
+            border-color: #8b5cf6;
+            background: rgba(0,0,0,0.4);
         }
-        select option { background: #1e1b4b; color: white; }
-        textarea { resize: vertical; min-height: 120px; }
-       .file-upload { position: relative; display: block; }
-       .file-upload input[type=file] {
-            position: absolute;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
+        textarea {
+            resize: vertical;
+            min-height: 120px;
         }
-       .upload-area {
-            border: 2px dashed rgba(124, 58, 237, 0.5);
+      .upload-area {
+            border: 2px dashed rgba(255,255,255,0.3);
             border-radius: 12px;
             padding: 40px;
             text-align: center;
-            transition: 0.3s;
-            background: rgba(124, 58, 237, 0.05);
-        }
-       .upload-area:hover {
-            border-color: #7c3aed;
-            background: rgba(124, 58, 237, 0.1);
-        }
-       .upload-area i {
-            font-size: 48px;
-            color: #7c3aed;
-            margin-bottom: 12px;
-            display: block;
-        }
-       .upload-area p { color: #cbd5e1; font-size: 14px; }
-        #imagePreview {
-            display: none;
-            width: 100%;
-            max-height: 350px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-top: 15px;
-        }
-       .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(90deg, #7c3aed, #3b82f6);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
-            margin-top: 10px;
         }
-       .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
+      .upload-area:hover {
+            border-color: #8b5cf6;
+            background: rgba(139,92,246,0.1);
         }
-       .btn-submit:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-       .message {
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 600;
+        #resimInput { display: none; }
+        #preview {
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 12px;
+            margin-top: 20px;
             display: none;
         }
-       .message.success {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            color: #6ee7b7;
+      .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, #8b5cf6, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-       .message.error {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #fca5a5;
+      .btn-submit:hover { opacity: 0.9; }
+      .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo">Marneuli Store</div>
-        <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Ana Sayfa</a>
+        <h1><i class="fas fa-plus-circle"></i> İlan Ekle</h1>
+        <a href="index.html"><i class="fas fa-home"></i> Ana Sayfa</a>
     </div>
 
     <div class="container">
-        <h1 class="title">Yeni İlan Ekle</h1>
-        <div id="message" class="message"></div>
-
         <form id="ilanForm">
             <div class="form-group">
-                <label><i class="fa-solid fa-tag"></i> İlan Başlığı *</label>
-                <input type="text" id="title" placeholder="Örn: iPhone 14 Pro Max" required>
+                <label><i class="fas fa-heading"></i> İlan Başlığı *</label>
+                <input type="text" id="baslik" placeholder="Örn: iPhone 13 Pro Max 256GB" required>
             </div>
 
             <div class="form-group">
-                <label><i class="fa-solid fa-dollar-sign"></i> Fiyat ($) *</label>
-                <input type="number" id="price" placeholder="Örn: 999" min="0" required>
+                <label><i class="fas fa-align-left"></i> Açıklama *</label>
+                <textarea id="aciklama" placeholder="İlan detaylarını yazın..." required></textarea>
             </div>
 
             <div class="form-group">
-                <label><i class="fa-solid fa-layer-group"></i> Kategori *</label>
-                <select id="category" required>
-                    <option value="">Kategori Seç</option>
+                <label><i class="fas fa-tag"></i> Fiyat (₾) *</label>
+                <input type="number" id="fiyat" placeholder="0" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-list"></i> Kategori *</label>
+                <select id="kategori">
                     <option value="Elektronik">📱 Elektronik</option>
-                    <option value="Araç">🚗 Araç</option>
-                    <option value="Emlak">🏠 Emlak</option>
-                    <option value="Ev Eşyası">🛋️ Ev Eşyası</option>
+                    <option value="Araba">🚗 Araba</option>
+                    <option value="Ev Eşyası">🏠 Ev Eşyası</option>
                     <option value="Giyim">👕 Giyim</option>
                     <option value="Diğer">📦 Diğer</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label><i class="fa-solid fa-align-left"></i> Açıklama</label>
-                <textarea id="description" placeholder="İlan detaylarını yaz..."></textarea>
+                <label><i class="fas fa-image"></i> İlan Fotoğrafı *</label>
+                <div class="upload-area" onclick="document.getElementById('resimInput').click()">
+                    <div id="uploadText">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 48px; margin-bottom: 10px; color: #8b5cf6;"></i>
+                        <p style="font-size: 16px; margin-bottom: 5px;">Fotoğraf Yüklemek İçin Tıkla</p>
+                        <small style="color: #aaa;">Max 5MB - JPG, PNG</small>
+                    </div>
+                    <input type="file" id="resimInput" accept="image/*">
+                    <img id="preview" src="">
+                </div>
             </div>
 
             <div class="form-group">
-                <label><i class="fa-solid fa-image"></i> Resim Yükle</label>
-                <label class="file-upload">
-                    <input type="file" id="imageFile" accept="image/*" onchange="previewFile()">
-                    <div class="upload-area">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <p><strong>Resim seçmek için tıkla</strong></p>
-                        <p style="font-size: 12px; color: #64748b; margin-top: 5px;">PNG, JPG, GIF - Max 5MB</p>
-                    </div>
-                </label>
-                <img id="imagePreview" alt="Önizleme">
+                <label><i class="fas fa-phone"></i> Telefon Numaranız *</label>
+                <input type="tel" id="telefon" placeholder="555 123 45 67" required>
             </div>
 
             <button type="submit" class="btn-submit" id="submitBtn">
-                <i class="fa-solid fa-plus"></i> İlanı Yayınla
+                <i class="fas fa-check"></i> İlanı Yayınla
             </button>
         </form>
     </div>
 
     <script>
-        const user = JSON.parse(localStorage.getItem('user') || 'null');
-        if (!user) {
-            alert('İlan eklemek için giriş yapmalısın!');
-            window.location.href = 'giris.html';
-        }
+        let base64Resim = '';
 
-        let uploadedImageUrl = '';
+        // Giriş kontrolü - token yoksa login sayfasına at
+        window.onload = function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('İlan eklemek için giriş yapmalısınız!');
+                window.location.href = 'giris.html';
+            }
+        };
 
-        async function previewFile() {
-            const file = document.getElementById('imageFile').files[0];
+        // Resim seçme ve önizleme
+        document.getElementById('resimInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
             if (!file) return;
 
+            // 5MB kontrolü
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Resim 5MB\'dan büyük olamaz!');
+                return;
+            }
+
             const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = document.getElementById('imagePreview');
-                img.src = e.target.result;
-                img.style.display = 'block';
+            reader.onload = function(event) {
+                base64Resim = event.target.result;
+                document.getElementById('preview').src = base64Resim;
+                document.getElementById('preview').style.display = 'block';
+                document.getElementById('uploadText').innerHTML = '<i class="fas fa-check-circle" style="color:#10b981;font-size:48px;"></i><p style="font-size:16px;margin-top:10px;">Fotoğraf Yüklendi</p>';
             };
             reader.readAsDataURL(file);
+        });
 
-            const formData = new FormData();
-            formData.append('image', file);
-
-            try {
-                const res = await fetch('https://marneuli-backend.onrender.com/api/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    uploadedImageUrl = data.imageUrl;
-                    showMessage('✅ Resim yüklendi!', 'success');
-                } else {
-                    showMessage('❌ Resim yüklenemedi: ' + data.error, 'error');
-                }
-            } catch (err) {
-                showMessage('❌ Upload hatası!', 'error');
-            }
-        }
-
-        function showMessage(text, type) {
-            const msg = document.getElementById('message');
-            msg.textContent = text;
-            msg.className = 'message ' + type;
-            msg.style.display = 'block';
-            setTimeout(() => msg.style.display = 'none', 3000);
-        }
-
-        document.getElementById('ilanForm').addEventListener('submit', async (e) => {
+        // Form gönderme
+        document.getElementById('ilanForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ekleniyor...';
+            const baslik = document.getElementById('baslik').value;
+            const aciklama = document.getElementById('aciklama').value;
+            const fiyat = document.getElementById('fiyat').value;
+            const kategori = document.getElementById('kategori').value;
+            const telefon = document.getElementById('telefon').value;
+            const token = localStorage.getItem('token');
 
-            const data = {
-                title: document.getElementById('title').value.trim(),
-                price: parseFloat(document.getElementById('price').value),
-                category: document.getElementById('category').value,
-                description: document.getElementById('description').value.trim(),
-                imageUrl: uploadedImageUrl,
-                userEmail: user.email
+            if (!baslik ||!aciklama ||!fiyat ||!telefon ||!base64Resim) {
+                alert('Tüm alanları doldurun ve fotoğraf seçin!');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yayınlanıyor...';
+
+            const ilan = {
+                baslik,
+                aciklama,
+                fiyat: parseInt(fiyat),
+                kategori,
+                telefon,
+                resim: base64Resim,
+                tarih: new Date().toLocaleDateString('tr-TR'),
+                id: Date.now()
             };
 
             try {
-                const res = await fetch('https://marneuli-backend.onrender.com/api/listing', {
+                const res = await fetch('https://marneuli-backend.onrender.com/api/ilanlar', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    body: JSON.stringify(ilan)
                 });
 
                 const result = await res.json();
 
                 if (res.ok) {
-                    showMessage('✅ İlan başarıyla eklendi!', 'success');
-                    document.getElementById('ilanForm').reset();
-                    document.getElementById('imagePreview').style.display = 'none';
-                    uploadedImageUrl = '';
-                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    alert('İlan başarıyla yayınlandı!');
+                    window.location.href = 'index.html';
                 } else {
-                    showMessage('❌ Hata: ' + result.error, 'error');
+                    alert('Hata: ' + result.message);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-check"></i> İlanı Yayınla';
                 }
             } catch (err) {
-                showMessage('❌ Sunucu hatası!', 'error');
-            } finally {
+                alert('Sunucu hatası. Backend uyuyor olabilir. 50sn bekleyip tekrar deneyin.');
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-plus"></i> İlanı Yayınla';
+                btn.innerHTML = '<i class="fas fa-check"></i> İlanı Yayınla';
             }
         });
     </script>

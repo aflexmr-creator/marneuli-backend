@@ -3,223 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Yap - Marneuli Store</title>
+    <title>Hesap Oluştur - Marneuli Store</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: Arial, sans-serif;
-            background: linear-gradient(180deg, #2d1b69 0%, #11052c 100%);
-            min-height: 100vh;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
             padding: 20px;
         }
-        .login-box {
+        .card {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 16px;
             width: 100%;
-            max-width: 400px;
-            text-align: center;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         .logo {
-            width: 80px;
-            height: 80px;
-            background: white;
-            border-radius: 16px;
-            margin: 0 auto 20px;
+            width: 60px;
+            height: 60px;
+            background: #3b82f6;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-        }
-        .title {
-            color: white;
+            margin: 0 auto 20px;
             font-size: 28px;
-            font-weight: bold;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            color: #94a3b8;
+            text-align: center;
+            font-size: 14px;
             margin-bottom: 30px;
         }
-        .tabs {
-            display: flex;
-            background: rgba(255,255,255,0.1);
-            border-radius: 25px;
-            padding: 4px;
-            margin-bottom: 25px;
-        }
-        .tab {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: transparent;
-            color: #ccc;
-            border-radius: 22px;
-            font-size: 15px;
-            cursor: pointer;
-        }
-        .tab.active {
-            background: linear-gradient(90deg, #7c3aed 0%, #3b82f6 100%);
+        .error-box {
+            background: #dc2626;
             color: white;
-            font-weight: bold;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
         }
-        .input-group {
+        .error-box.show { display: flex; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            color: #cbd5e1;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .input-wrapper {
             position: relative;
-            margin-bottom: 15px;
+        }
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 18px;
         }
         input {
             width: 100%;
-            padding: 16px 20px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 12px;
+            padding: 14px 14px 14px 45px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
             color: white;
             font-size: 15px;
         }
-        input::placeholder { color: #aaa; }
         input:focus {
             outline: none;
-            border-color: #7c3aed;
+            border-color: #3b82f6;
         }
-        .eye {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #aaa;
-            user-select: none;
-        }
-        .remember {
-            display: flex;
-            align-items: center;
-            color: #ccc;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-        .remember input {
-            width: auto;
-            margin-right: 8px;
-        }
-        .btn-login {
+        input::placeholder { color: #64748b; }
+        .submit-btn {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(90deg, #7c3aed 0%, #3b82f6 100%);
-            border: none;
-            border-radius: 12px;
+            padding: 14px;
+            background: #3b82f6;
             color: white;
+            border: none;
+            border-radius: 8px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            margin-bottom: 20px;
+            margin-top: 10px;
         }
-        .btn-login:active { transform: scale(0.98); }
-        .signup {
-            color: #aaa;
+        .submit-btn:hover { background: #2563eb; }
+        .submit-btn:disabled {
+            background: #475569;
+            cursor: not-allowed;
+        }
+        .switch-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #94a3b8;
             font-size: 14px;
         }
-        .signup a {
-            color: white;
+        .switch-text a {
+            color: #3b82f6;
             text-decoration: none;
-            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="login-box">
-        <div class="logo">🛍️</div>
-        <div class="title">Marneuli Store</div>
+    <div class="card">
+        <div class="logo">🏪</div>
+        <h1 id="formTitle">Hesap Oluştur</h1>
+        <p class="subtitle" id="formSubtitle">Marneuli Store'a katıl, alışverişe başla</p>
         
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('email', event)">E-posta</button>
-            <button class="tab" onclick="switchTab('mobile', event)">Mobil</button>
+        <div class="error-box" id="errorBox">
+            <span>⚠️</span>
+            <span id="errorText">Sunucu hatası. Lütfen daha sonra tekrar deneyin.</span>
         </div>
 
-        <div id="email-form">
-            <div class="input-group">
-                <input type="email" id="email" placeholder="E-posta">
+        <!-- KAYIT FORMU -->
+        <form id="signupForm">
+            <div class="form-group">
+                <label>Ad Soyad *</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="adSoyad" placeholder="Ad Soyad" required>
+                </div>
             </div>
-            <div class="input-group">
-                <input type="password" id="password" placeholder="Giriş şifresi">
-                <span class="eye" onclick="togglePass('password')">👁️</span>
+            
+            <div class="form-group">
+                <label>E-posta *</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">✉️</span>
+                    <input type="email" id="email" placeholder="E-posta" required>
+                </div>
             </div>
-        </div>
-
-        <div id="mobile-form" style="display:none;">
-            <div class="input-group">
-                <input type="tel" id="mobile" placeholder="Telefon Numarası">
+            
+            <div class="form-group">
+                <label>Telefon Numarası *</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">📞</span>
+                    <input type="tel" id="telefon" placeholder="Telefon Numarası" required>
+                </div>
             </div>
-            <div class="input-group">
-                <input type="password" id="mobilePass" placeholder="Giriş şifresi">
-                <span class="eye" onclick="togglePass('mobilePass')">👁️</span>
+            
+            <div class="form-group">
+                <label>Şifre *</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="sifre" placeholder="Şifre" required>
+                </div>
             </div>
-        </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">Kayıt Ol</button>
+        </form>
 
-        <div class="remember">
-            <input type="checkbox" id="remember">
-            <label for="remember">Beni Hatırla</label>
-        </div>
+        <!-- GİRİŞ FORMU -->
+        <form id="loginForm" style="display: none;">
+            <div class="form-group">
+                <label>E-posta *</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">✉️</span>
+                    <input type="email" id="loginEmail" placeholder="E-posta" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Şifre *</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="loginSifre" placeholder="Şifre" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="loginBtn">Giriş Yap</button>
+        </form>
 
-        <button class="btn-login" onclick="girisYap()">Giriş yapmak</button>
-
-        <div class="signup">
-            Hesap yok? <a href="kayit.html">Kayıt olmak</a>
-        </div>
+        <p class="switch-text" id="switchText">
+            Zaten hesabın var mı? <a onclick="toggleForm()">Giriş Yap</a>
+        </p>
     </div>
 
     <script>
-        let currentTab = 'email';
+        let isLogin = false;
 
-        function switchTab(tab, e) {
-            currentTab = tab;
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            e.target.classList.add('active');
+        function toggleForm() {
+            isLogin = !isLogin;
+            const signupForm = document.getElementById('signupForm');
+            const loginForm = document.getElementById('loginForm');
+            const title = document.getElementById('formTitle');
+            const subtitle = document.getElementById('formSubtitle');
+            const switchText = document.getElementById('switchText');
             
-            if (tab === 'email') {
-                document.getElementById('email-form').style.display = 'block';
-                document.getElementById('mobile-form').style.display = 'none';
+            hideError();
+            
+            if (isLogin) {
+                signupForm.style.display = 'none';
+                loginForm.style.display = 'block';
+                title.textContent = 'Giriş Yap';
+                subtitle.textContent = 'Hesabına giriş yap';
+                switchText.innerHTML = 'Hesabın yok mu? <a onclick="toggleForm()">Kayıt Ol</a>';
             } else {
-                document.getElementById('email-form').style.display = 'none';
-                document.getElementById('mobile-form').style.display = 'block';
+                signupForm.style.display = 'block';
+                loginForm.style.display = 'none';
+                title.textContent = 'Hesap Oluştur';
+                subtitle.textContent = 'Marneuli Store\'a katıl, alışverişe başla';
+                switchText.innerHTML = 'Zaten hesabın var mı? <a onclick="toggleForm()">Giriş Yap</a>';
             }
         }
 
-        function togglePass(id) {
-            const passInput = document.getElementById(id);
-            passInput.type = passInput.type === 'password' ? 'text' : 'password';
+        function showError(message) {
+            const errorBox = document.getElementById('errorBox');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorBox.classList.add('show');
         }
 
-        async function girisYap() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const mobile = document.getElementById('mobile').value.trim();
-            const mobilePass = document.getElementById('mobilePass').value;
+        function hideError() {
+            document.getElementById('errorBox').classList.remove('show');
+        }
 
-            const loginData = currentTab === 'email' 
-                ? { email, password } 
-                : { mobile, password: mobilePass };
+        // KAYIT OL
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+            
+            const btn = document.getElementById('submitBtn');
+            const adSoyad = document.getElementById('adSoyad').value;
+            const email = document.getElementById('email').value;
+            const telefon = document.getElementById('telefon').value;
+            const sifre = document.getElementById('sifre').value;
 
-            if (!loginData.password || (!loginData.email && !loginData.mobile)) {
-                alert('Tüm alanları doldur!');
-                return;
+            btn.disabled = true;
+            btn.textContent = 'Kayıt yapılıyor...';
+
+            try {
+                const res = await fetch('https://marneuli-backend.onrender.com/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ adSoyad, email, telefon, sifre })
+                });
+
+                const result = await res.json();
+
+                if (res.ok) {
+                    alert('Kayıt başarılı! Giriş yapabilirsiniz.');
+                    toggleForm();
+                } else {
+                    showError(result.message || 'Kayıt başarısız');
+                }
+            } catch (err) {
+                showError('Sunucu hatası. Backend uyuyor olabilir. 1dk bekleyip tekrar deneyin.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Kayıt Ol';
             }
+        });
+
+        // GİRİŞ YAP
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+            
+            const btn = document.getElementById('loginBtn');
+            const email = document.getElementById('loginEmail').value;
+            const sifre = document.getElementById('loginSifre').value;
+
+            btn.disabled = true;
+            btn.textContent = 'Giriş yapılıyor...';
 
             try {
                 const res = await fetch('https://marneuli-backend.onrender.com/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(loginData)
+                    body: JSON.stringify({ email, sifre })
                 });
-                
+
                 const result = await res.json();
-                
+
                 if (res.ok) {
-                    alert('Giriş başarılı! Hoşgeldin ' + result.user.name);
-                    localStorage.setItem('user', JSON.stringify(result.user));
+                    localStorage.setItem('token', result.token);
                     window.location.href = 'index.html';
                 } else {
-                    alert('Hata: ' + result.error);
+                    showError(result.message || 'Giriş başarısız');
                 }
             } catch (err) {
-                alert('Sunucu hatası: node server.js çalışıyor mu?');
+                showError('Sunucu hatası. Backend uyuyor olabilir. 1dk bekleyip tekrar deneyin.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Giriş Yap';
             }
-        }
+        });
     </script>
 </body>
 </html>

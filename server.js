@@ -1,122 +1,139 @@
-// DOSYA: server.js
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
-const bcrypt = require('bcryptjs');
-require('dotenv').config();
-
 const app = express();
 
-// MIDDLEWARE
-app.use(cors());
-app.use(express.json({ limit: '10mb' })); // Fotoğraf için büyük limit
+// 1. CORS ve JSON ayarı - 10MB resim için limit artırıldı
+app.use(cors()); 
+app.use(express.json({ limit: '10mb' })); // RESİM İÇİN ŞART
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// MONGO BAGLANTI
-mongoose.connect(process.env.MONGO_URL)
- .then(() => console.log('MongoDB bağlandı'))
- .catch(e => console.log('MongoDB HATA:', e.message));
+// 2. Sahte veritabanı - Render restart olunca silinir
+let kullanicilar = [];
+let ilanlar = [];
 
-// USER MODEL
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,
-  createdAt: { type: Date, default: Date.now }
-});
-const User = mongoose.model('User', userSchema);
-
-// LISTING MODEL
-const listingSchema = new mongoose.Schema({
-  title: { type: String, required: [true, 'Başlık zorunlu'] },
-  price: { type: Number, required: [true, 'Fiyat zorunlu'] },
-  description: String,
-  images: [String],
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  paid: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now }
-});
-const Listing = mongoose.model('Listing', listingSchema);
-
-// TEST ENDPOINT
+// 3. TEST ENDPOINT - Backend çalışıyor mu kontrol için
 app.get('/', (req, res) => {
-  res.json({ msg: 'Marneuli Store API çalışıyor' });
+    res.json({ message: 'Marneuli Backend Çalışıyor' });
 });
 
-// KAYIT OL
-app.post('/api/register', async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashedPassword });
-    res.json({ msg: 'Kayıt başarılı', user: { name: user.name, email: user.email } });
-  } catch (e) {
-    res.status(500).json({ msg: 'Kayıt hatası', error: e.message });
-  }
+// 4. KAYIT OL ENDPOINT
+app.post('/api/register', (req, res) => {
+    const { email, sifre, adSoyad, telefon } = req.body;
+    
+    // Boş alan kontrolü
+    if (!email || !sifre || !adSoyad || !telefon) {
+        return res.status(400).json({ message: 'Tüm alanları doldurun' });
+    }
+    
+    // Email zaten var mı kontrol
+    const varMi = kullanicilar.find(k => k.email === email);
+    if (varMi) {
+        return res.status(400).json({ message: 'Bu email zaten kayıtlı' });
+    }
+    
+    const yeniKullanici = { 
+        id: Date.now(), 
+        email, 
+        sifre, 
+        adSoyad, 
+        telefon 
+    };
+    kullanicilar.push(yeniKullanici);
+    
+    console.log('Yeni kayıt:', email);
+    res.json({ message: 'Kayıt başarılı' });
 });
 
-// GİRİŞ YAP
-app.post('/api/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: 'Kullanıcı bulunamadı' });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: 'Şifre yanlış' });
-
-    res.json({ msg: 'Giriş başarılı', user: { _id: user._id, name: user.name, email: user.email } });
-  } catch (e) {
-    res.status(500).json({ msg: 'Giriş hatası', error: e.message });
-  }
-});
-
-// İLAN EKLEME - DÜZGÜN HALİ
-app.post('/api/listing/create', async (req, res) => {
-  console.log('İlan isteği geldi:', req.body);
-  try {
-    const { title, price, description, images, userId } = req.body;
-
-    if (!title) return res.status(400).json({ msg: 'Başlık zorunlu' });
-    if (!price) return res.status(400).json({ msg: 'Fiyat zorunlu' });
-
-    const listing = await Listing.create({
-      title,
-      price: Number(price),
-      description: description || '',
-      images: images || [],
-      userId: userId || null,
-      paid: false // Şimdilik ücretsiz, sonra ödeme ekleriz
+// 5. GİRİŞ YAP ENDPOINT
+app.post('/api/login', (req, res) => {
+    const { email, sifre } = req.body;
+    
+    if (!email || !sifre) {
+        return res.status(400).json({ message: 'Email ve şifre girin' });
+    }
+    
+    const kullanici = kullanicilar.find(k => k.email === email && k.sifre === sifre);
+    if (!kullanici) {
+        return res.status(400).json({ message: 'Email veya şifre hatalı' });
+    }
+    
+    console.log('Giriş yapıldı:', email);
+    res.json({ 
+        message: 'Giriş başarılı', 
+        token: 'token-' + kullanici.id,
+        kullanici: { 
+            email: kullanici.email, 
+            adSoyad: kullanici.adSoyad 
+        }
     });
-
-    console.log('BAŞARILI: İlan kaydedildi', listing._id);
-    res.json({ msg: 'İlan eklendi', listing });
-
-  } catch (e) {
-    console.log('SUNUCU HATASI YAKALANDI:', e.message);
-    res.status(500).json({ msg: 'Sunucu hatası', error: e.message });
-  }
 });
 
-// TÜM İLANLARI ÇEK
-app.get('/api/listings', async (req, res) => {
-  try {
-    const listings = await Listing.find().sort({ createdAt: -1 });
-    res.json(listings);
-  } catch (e) {
-    res.status(500).json({ msg: 'İlanlar çekilemedi', error: e.message });
-  }
+// 6. TÜM İLANLARI ÇEK - index.html için
+app.get('/api/ilanlar', (req, res) => {
+    res.json(ilanlar);
 });
 
-// TEK İLAN ÇEK
-app.get('/api/listing/:id', async (req, res) => {
-  try {
-    const listing = await Listing.findById(req.params.id);
-    if (!listing) return res.status(404).json({ msg: 'İlan bulunamadı' });
-    res.json(listing);
-  } catch (e) {
-    res.status(500).json({ msg: 'İlan çekilemedi', error: e.message });
-  }
+// 7. İLAN EKLE - RESİM DESTEKLİ GÜNCELLENDİ
+app.post('/api/ilanlar', (req, res) => {
+    const token = req.headers.authorization;
+    
+    // Token kontrolü
+    if (!token) {
+        return res.status(401).json({ message: 'İlan eklemek için giriş yapmalısınız' });
+    }
+    
+    const yeniIlan = req.body;
+    
+    // Zorunlu alan kontrolü
+    if (!yeniIlan.baslik || !yeniIlan.fiyat || !yeniIlan.resim) {
+        return res.status(400).json({ message: 'Başlık, fiyat ve resim zorunlu' });
+    }
+    
+    // ID ve tarih ekle
+    yeniIlan.id = Date.now();
+    yeniIlan.tarih = new Date().toLocaleDateString('tr-TR');
+    
+    // En başa ekle - yeni ilanlar üstte gözüksün
+    ilanlar.unshift(yeniIlan);
+    
+    console.log('Yeni ilan eklendi:', yeniIlan.baslik);
+    res.json({ message: 'İlan başarıyla eklendi', ilan: yeniIlan });
 });
 
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`Server ${PORT} portunda ayakta`));
+// 8. TEK İLAN DETAYI ÇEK - ilan-detay.html için
+app.get('/api/ilanlar/:id', (req, res) => {
+    const ilanId = parseInt(req.params.id);
+    const ilan = ilanlar.find(i => i.id === ilanId);
+    
+    if (!ilan) {
+        return res.status(404).json({ message: 'İlan bulunamadı' });
+    }
+    
+    res.json(ilan);
+});
+
+// 9. İLAN SİL
+app.delete('/api/ilanlar/:id', (req, res) => {
+    const token = req.headers.authorization;
+    
+    if (!token) {
+        return res.status(401).json({ message: 'Giriş yapmalısınız' });
+    }
+    
+    const ilanId = parseInt(req.params.id);
+    const index = ilanlar.findIndex(i => i.id === ilanId);
+    
+    if (index === -1) {
+        return res.status(404).json({ message: 'İlan bulunamadı' });
+    }
+    
+    ilanlar.splice(index, 1);
+    console.log('İlan silindi:', ilanId);
+    res.json({ message: 'İlan silindi' });
+});
+
+// 10. Render portu
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server ${PORT} portunda çalışıyor`);
+});
