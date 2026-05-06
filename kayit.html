@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hesap Oluştur - Marneuli Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0f172a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+       .card {
+            background: #1e293b;
+            padding: 40px 32px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid #334155;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+       .icon-box {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+       .icon-box i { color: white; font-size: 28px; }
+        h1 {
+            color: white;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+       .subtitle {
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 15px;
+        }
+       .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+       .error {
+            background: #7f1d1d;
+            color: #fecaca;
+            border: 1px solid #dc2626;
+        }
+       .success {
+            background: #14532d;
+            color: #bbf7d0;
+            border: 1px solid #22c55e;
+        }
+       .form-group { margin-bottom: 20px; }
+        label {
+            color: #e2e8f0;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+       .input-wrapper { position: relative; }
+       .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 16px;
+        }
+        input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            background: #0f172a;
+            color: white;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-1px);
+        }
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon-box">
+            <i class="fa-solid fa-store"></i>
+        </div>
+
+        <h1>Hesap Oluştur</h1>
+        <p class="subtitle">Marneuli Store'a katıl, alışverişe başla</p>
+
+        <div id="message"></div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label>Ad Soyad *</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>E-posta *</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" name="email" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Telefon Numarası *</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" name="phone" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Şifre *</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="password" minlength="6" required>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">Hesap Oluştur</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const messageDiv = document.getElementById('message');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'İşlem yapılıyor...';
+            messageDiv.innerHTML = '';
+
+            const formData = new FormData(e.target);
+            const data = {
+                name: formData.get('name').trim(),
+                email: formData.get('email').trim(),
+                phone: formData.get('phone').trim(),
+                password: formData.get('password')
+            };
+
+            try {
+                const res = await fetch('https://marneuli-backend.onrender.com/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+
+                if (!res.ok) {
+                    // Backend hata mesajı yoksa genel hata göster
+                    const errorMsg = result.message || result.error || 'Kayıt işlemi başarısız oldu. Bilgilerinizi kontrol edin.';
+                    messageDiv.innerHTML = `
+                        <div class="message error">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            <span>${errorMsg}</span>
+                        </div>`;
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Hesap Oluştur';
+                } else {
+                    messageDiv.innerHTML = `
+                        <div class="message success">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Hesabınız başarıyla oluşturuldu. Giriş sayfasına yönlendiriliyorsunuz...</span>
+                        </div>`;
+
+                    setTimeout(() => {
+                        window.location.href = '/giris.html';
+                    }, 2000);
+                }
+
+            } catch (err) {
+                messageDiv.innerHTML = `
+                    <div class="message error">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <span>Sunucu hatası. Lütfen daha sonra tekrar deneyin.</span>
+                    </div>`;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Hesap Oluştur';
+            }
+        });
+    </script>
+</body>
+</html>

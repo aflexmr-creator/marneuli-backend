@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlan Ekle - Marneuli Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+       .header {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+       .logo {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+       .btn-back {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+       .btn-back:hover { background: rgba(255,255,255,0.15); }
+       .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+       .title {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(90deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+       .form-group { margin-bottom: 22px; }
+       .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 15px 18px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+        input::placeholder, textarea::placeholder { color: #94a3b8; }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #7c3aed;
+            background: rgba(255,255,255,0.1);
+        }
+        select option { background: #1e1b4b; color: white; }
+        textarea { resize: vertical; min-height: 120px; }
+       .file-upload { position: relative; display: block; }
+       .file-upload input[type=file] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+       .upload-area {
+            border: 2px dashed rgba(124, 58, 237, 0.5);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            transition: 0.3s;
+            background: rgba(124, 58, 237, 0.05);
+        }
+       .upload-area:hover {
+            border-color: #7c3aed;
+            background: rgba(124, 58, 237, 0.1);
+        }
+       .upload-area i {
+            font-size: 48px;
+            color: #7c3aed;
+            margin-bottom: 12px;
+            display: block;
+        }
+       .upload-area p { color: #cbd5e1; font-size: 14px; }
+        #imagePreview {
+            display: none;
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+       .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+       .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
+        }
+       .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+       .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+       .message.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #6ee7b7;
+        }
+       .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Marneuli Store</div>
+        <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Ana Sayfa</a>
+    </div>
+
+    <div class="container">
+        <h1 class="title">Yeni İlan Ekle</h1>
+        <div id="message" class="message"></div>
+
+        <form id="ilanForm">
+            <div class="form-group">
+                <label><i class="fa-solid fa-tag"></i> İlan Başlığı *</label>
+                <input type="text" id="title" placeholder="Örn: iPhone 14 Pro Max" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-dollar-sign"></i> Fiyat ($) *</label>
+                <input type="number" id="price" placeholder="Örn: 999" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-layer-group"></i> Kategori *</label>
+                <select id="category" required>
+                    <option value="">Kategori Seç</option>
+                    <option value="Elektronik">📱 Elektronik</option>
+                    <option value="Araç">🚗 Araç</option>
+                    <option value="Emlak">🏠 Emlak</option>
+                    <option value="Ev Eşyası">🛋️ Ev Eşyası</option>
+                    <option value="Giyim">👕 Giyim</option>
+                    <option value="Diğer">📦 Diğer</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-align-left"></i> Açıklama</label>
+                <textarea id="description" placeholder="İlan detaylarını yaz..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fa-solid fa-image"></i> Resim Yükle</label>
+                <label class="file-upload">
+                    <input type="file" id="imageFile" accept="image/*" onchange="previewFile()">
+                    <div class="upload-area">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p><strong>Resim seçmek için tıkla</strong></p>
+                        <p style="font-size: 12px; color: #64748b; margin-top: 5px;">PNG, JPG, GIF - Max 5MB</p>
+                    </div>
+                </label>
+                <img id="imagePreview" alt="Önizleme">
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <i class="fa-solid fa-plus"></i> İlanı Yayınla
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        if (!user) {
+            alert('İlan eklemek için giriş yapmalısın!');
+            window.location.href = 'giris.html';
+        }
+
+        let uploadedImageUrl = '';
+
+        async function previewFile() {
+            const file = document.getElementById('imageFile').files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.getElementById('imagePreview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const res = await fetch('https://marneuli-backend.onrender.com/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    uploadedImageUrl = data.imageUrl;
+                    showMessage('✅ Resim yüklendi!', 'success');
+                } else {
+                    showMessage('❌ Resim yüklenemedi: ' + data.error, 'error');
+                }
+            } catch (err) {
+                showMessage('❌ Upload hatası!', 'error');
+            }
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
+        }
+
+        document.getElementById('ilanForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ekleniyor...';
+
+            const data = {
+                title: document.getElementById('title').value.trim(),
+                price: parseFloat(document.getElementById('price').value),
+                category: document.getElementById('category').value,
+                description: document.getElementById('description').value.trim(),
+                imageUrl: uploadedImageUrl,
+                userEmail: user.email
+            };
+
+            try {
+                const res = await fetch('https://marneuli-backend.onrender.com/api/listing', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+
+                if (res.ok) {
+                    showMessage('✅ İlan başarıyla eklendi!', 'success');
+                    document.getElementById('ilanForm').reset();
+                    document.getElementById('imagePreview').style.display = 'none';
+                    uploadedImageUrl = '';
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                } else {
+                    showMessage('❌ Hata: ' + result.error, 'error');
+                }
+            } catch (err) {
+                showMessage('❌ Sunucu hatası!', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-plus"></i> İlanı Yayınla';
+            }
+        });
+    </script>
+</body>
+</html>

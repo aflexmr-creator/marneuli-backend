@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marneuli Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background: #0f0c29;
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        /* HEADER */
+        .header {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 20px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .btn-gradient {
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
+        }
+
+        /* HERO + SEARCH */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .hero h2 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .search-box {
+            position: relative;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 18px 50px 18px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            color: white;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+        }
+        .search-box input::placeholder { color: #aaa; }
+        .search-box i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7c3aed;
+        }
+
+        /* KATEGORİ FİLTRE */
+        .categories {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0 20px 40px;
+        }
+        .cat-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            color: #ccc;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .cat-btn.active, .cat-btn:hover {
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* İLAN GRID */
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 5% 60px; }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 25px; 
+        }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: 0.4s;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.3);
+            border-color: rgba(124, 58, 237, 0.5);
+        }
+        .card-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: linear-gradient(45deg, #1e1b4b, #312e81);
+        }
+        .card-body { padding: 20px; }
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+        .badge {
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .price {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #34d399, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card h3 {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #f1f5f9;
+        }
+        .desc {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.5;
+            height: 42px;
+            overflow: hidden;
+        }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .user {
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+        .empty {
+            text-align: center;
+            padding: 80px 20px;
+            color: #64748b;
+            font-size: 18px;
+            grid-column: 1 / -1;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px;
+            font-size: 18px;
+            color: #7c3aed;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav">
+            <div class="logo">Marneuli Store</div>
+            <div class="nav-actions">
+                <a href="giris.html" class="btn-gradient"><i class="fa-solid fa-user"></i> Giriş</a>
+                <a href="ilan-ekle.html" class="btn-gradient"><i class="fa-solid fa-plus"></i> İlan Ekle</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h2>Marneuli'nin En Büyük Pazarı</h2>
+        <p style="color: #94a3b8; font-size: 18px;">Binlerce ilan, en iyi fiyatlar</p>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="iPhone, Araba, Ev ara..." onkeyup="filtrele()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+    </section>
+
+    <div class="categories">
+        <button class="cat-btn active" onclick="kategoriFiltre('')">Tümü</button>
+        <button class="cat-btn" onclick="kategoriFiltre('Elektronik')">Elektronik</button>
+        <button class="cat-btn" onclick="kategoriFiltre('Araç')">Araç</button>
+        <button class="cat-btn" onclick="kategoriFiltre('Emlak')">Emlak</button>
+        <button class="cat-btn" onclick="kategoriFiltre('Ev Eşyası')">Ev Eşyası</button>
+        <button class="cat-btn" onclick="kategoriFiltre('Giyim')">Giyim</button>
+        <button class="cat-btn" onclick="kategoriFiltre('Diğer')">Diğer</button>
+    </div>
+
+    <div class="container">
+        <div id="ilanlar" class="grid">
+            <div class="loading">İlanlar yükleniyor...</div>
+        </div>
+    </div>
+
+    <script>
+        let tumIlanlar = [];
+        let aktifKategori = '';
+
+        async function ilanlariGetir() {
+            try {
+                const res = await fetch('https://marneuli-backend.onrender.com/api/listings');
+                tumIlanlar = await res.json();
+                ilanlariGoster(tumIlanlar);
+            } catch (err) {
+                document.getElementById('ilanlar').innerHTML = '<div class="empty">Sunucu hatası! node server.js çalışıyor mu?</div>';
+            }
+        }
+
+        function ilanlariGoster(ilanlar) {
+            const container = document.getElementById('ilanlar');
+            
+            if (ilanlar.length === 0) {
+                container.innerHTML = '<div class="empty"><i class="fa-solid fa-box-open" style="font-size:48px; margin-bottom:15px; display:block;"></i>Henüz ilan yok. İlk ilanı sen ekle!</div>';
+                return;
+            }
+
+            container.innerHTML = ilanlar.map(ilan => `
+                <div class="card">
+                    <img class="card-img" src="${ilan.imageUrl || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'}" alt="${ilan.title}">
+                    <div class="card-body">
+                        <div class="card-top">
+                            <span class="badge">${ilan.category}</span>
+                            <div class="price">$${ilan.price}</div>
+                        </div>
+                        <h3>${ilan.title}</h3>
+                        <p class="desc">${ilan.description || 'Açıklama eklenmemiş'}</p>
+                        <div class="card-footer">
+                            <span class="user"><i class="fa-solid fa-user"></i> ${ilan.userEmail}</span>
+                            <span style="color: #7c3aed;"><i class="fa-solid fa-eye"></i></span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filtrele() {
+            const arama = document.getElementById('searchInput').value.toLowerCase();
+            let filtreli = tumIlanlar;
+            
+            if (aktifKategori) {
+                filtreli = filtreli.filter(i => i.category === aktifKategori);
+            }
+            if (arama) {
+                filtreli = filtreli.filter(i => 
+                    i.title.toLowerCase().includes(arama) || 
+                    i.description?.toLowerCase().includes(arama)
+                );
+            }
+            ilanlariGoster(filtreli);
+        }
+
+        function kategoriFiltre(kat) {
+            aktifKategori = kat;
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            filtrele();
+        }
+
+        ilanlariGetir();
+    </script>
+</body>
+</html>

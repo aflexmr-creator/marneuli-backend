@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Marneuli Store</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif;
+            background: linear-gradient(180deg, #2d1b69 0%, #11052c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 16px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        .title {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .tabs {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 4px;
+            margin-bottom: 25px;
+        }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: #ccc;
+            border-radius: 22px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: linear-gradient(90deg, #7c3aed 0%, #3b82f6 100%);
+            color: white;
+            font-weight: bold;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+        }
+        input::placeholder { color: #aaa; }
+        input:focus {
+            outline: none;
+            border-color: #7c3aed;
+        }
+        .eye {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #aaa;
+            user-select: none;
+        }
+        .remember {
+            display: flex;
+            align-items: center;
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .remember input {
+            width: auto;
+            margin-right: 8px;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #7c3aed 0%, #3b82f6 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .btn-login:active { transform: scale(0.98); }
+        .signup {
+            color: #aaa;
+            font-size: 14px;
+        }
+        .signup a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="logo">🛍️</div>
+        <div class="title">Marneuli Store</div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('email', event)">E-posta</button>
+            <button class="tab" onclick="switchTab('mobile', event)">Mobil</button>
+        </div>
+
+        <div id="email-form">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="E-posta">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Giriş şifresi">
+                <span class="eye" onclick="togglePass('password')">👁️</span>
+            </div>
+        </div>
+
+        <div id="mobile-form" style="display:none;">
+            <div class="input-group">
+                <input type="tel" id="mobile" placeholder="Telefon Numarası">
+            </div>
+            <div class="input-group">
+                <input type="password" id="mobilePass" placeholder="Giriş şifresi">
+                <span class="eye" onclick="togglePass('mobilePass')">👁️</span>
+            </div>
+        </div>
+
+        <div class="remember">
+            <input type="checkbox" id="remember">
+            <label for="remember">Beni Hatırla</label>
+        </div>
+
+        <button class="btn-login" onclick="girisYap()">Giriş yapmak</button>
+
+        <div class="signup">
+            Hesap yok? <a href="kayit.html">Kayıt olmak</a>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'email';
+
+        function switchTab(tab, e) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            if (tab === 'email') {
+                document.getElementById('email-form').style.display = 'block';
+                document.getElementById('mobile-form').style.display = 'none';
+            } else {
+                document.getElementById('email-form').style.display = 'none';
+                document.getElementById('mobile-form').style.display = 'block';
+            }
+        }
+
+        function togglePass(id) {
+            const passInput = document.getElementById(id);
+            passInput.type = passInput.type === 'password' ? 'text' : 'password';
+        }
+
+        async function girisYap() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const mobile = document.getElementById('mobile').value.trim();
+            const mobilePass = document.getElementById('mobilePass').value;
+
+            const loginData = currentTab === 'email' 
+                ? { email, password } 
+                : { mobile, password: mobilePass };
+
+            if (!loginData.password || (!loginData.email && !loginData.mobile)) {
+                alert('Tüm alanları doldur!');
+                return;
+            }
+
+            try {
+                const res = await fetch('https://marneuli-backend.onrender.com/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const result = await res.json();
+                
+                if (res.ok) {
+                    alert('Giriş başarılı! Hoşgeldin ' + result.user.name);
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    window.location.href = 'index.html';
+                } else {
+                    alert('Hata: ' + result.error);
+                }
+            } catch (err) {
+                alert('Sunucu hatası: node server.js çalışıyor mu?');
+            }
+        }
+    </script>
+</body>
+</html>
