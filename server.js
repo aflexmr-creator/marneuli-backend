@@ -1,68 +1,75 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
-
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Bağlantı
+// MONGO BAĞLANTISI
 mongoose.connect(process.env.MONGO_URL)
-.then(() => console.log('MongoDB bağlandı kral'))
-.catch(err => console.log('Mongo Hata:', err));
+  .then(() => console.log('MongoDB bağlandı kral'))
+  .catch(err => console.error('MongoDB hata:', err));
 
-// Product Model - Basit versiyon
-const productSchema = new mongoose.Schema({
-  name: String,
-  price: Number,
-  image: String,
-  description: String,
-  category: String
+// USER MODELİ
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  phone: { type: String, required: true },
+  password: { type: String, required: true }
 });
 
-const Product = mongoose.model('Product', productSchema);
+const User = mongoose.model('User', userSchema);
 
-// ANA SAYFA TEST ROUTE
+// ANA SAYFA TEST
 app.get('/', (req, res) => {
-  res.json({ message: 'Marneuli Backend çalışıyor kral 🔥' });
+  res.send('Marneuli Store Backend Çalışıyor Kral 🔥');
 });
 
-// TÜM ÜRÜNLERİ GETİR
-app.get('/api/products', async (req, res) => {
+// KAYIT ENDPOINTİ
+app.post('/api/register', async (req, res) => {
   try {
-    const products = await Product.find();
-    res.json(products);
+    const { name, email, phone, password } = req.body;
+    
+    // Email var mı kontrol
+    const varMi = await User.findOne({ email });
+    if (varMi) {
+      return res.status(400).json({ error: 'Bu email zaten kayıtlı' });
+    }
+
+    const user = new User({ name, email, phone, password });
+    await user.save();
+    
+    res.status(201).json({ 
+      message: 'Kayıt başarılı kral', 
+      user: { name: user.name, email: user.email } 
+    });
   } catch (error) {
-    res.status(500).json({ error: 'Sunucu hatası' });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// TEK ÜRÜN GETİR
-app.get('/api/products/:id', async (req, res) => {
+// LOGIN ENDPOINTİ - LAZIM OLUR
+app.post('/api/login', async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ error: 'Ürün bulunamadı' });
-    res.json(product);
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    
+    if (!user || user.password !== password) {
+      return res.status(401).json({ error: 'Email veya şifre hatalı' });
+    }
+    
+    res.json({ 
+      message: 'Giriş başarılı', 
+      user: { name: user.name, email: user.email } 
+    });
   } catch (error) {
-    res.status(500).json({ error: 'Sunucu hatası' });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// ÜRÜN EKLE - Test için
-app.post('/api/products', async (req, res) => {
-  try {
-    const product = new Product(req.body);
-    await product.save();
-    res.status(201).json(product);
-  } catch (error) {
-    res.status(400).json({ error: 'Ürün eklenemedi' });
-  }
-});
-
+// SERVER BAŞLAT
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`Server ${PORT} portunda çalışıyor`);
+  console.log(`Server ${PORT} portunda çalışıyor kral`);
 });
