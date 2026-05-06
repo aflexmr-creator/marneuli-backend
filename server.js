@@ -1,75 +1,97 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+require('dotenv').config();
+
 const app = express();
+const PORT = process.env.PORT || 3000;
 
+// Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
-// MONGO BAĞLANTISI
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log('MongoDB bağlandı kral'))
-  .catch(err => console.error('MongoDB hata:', err));
+// MongoDB Bağlantısı
+const MONGO_URI = process.env.MONGO_URI;
+if (!MONGO_URI) {
+  console.error('❌ HATA: MONGO_URI environment değişkeni tanımlanmamış!');
+}
 
-// USER MODELİ
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  phone: { type: String, required: true },
-  password: { type: String, required: true }
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('✅ MongoDB Bağlandı'))
+.catch(err => console.error('❌ MONGODB BAĞLANTI HATASI:', err));
+
+// İlan Şeması
+const ilanSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  price: { type: String, required: true },
+  description: { type: String, default: '' },
+  category: { type: String, default: 'Diğer' },
+  imageUrl: { type: String, default: '' },
+  createdAt: { type: Date, default: Date.now }
 });
 
-const User = mongoose.model('User', userSchema);
+const Ilan = mongoose.model('Ilan', ilanSchema);
 
-// ANA SAYFA TEST
+// Ana sayfa test
 app.get('/', (req, res) => {
-  res.send('Marneuli Store Backend Çalışıyor Kral 🔥');
+  res.send('Marneuli Store Backend Çalışıyor 🚀');
 });
 
-// KAYIT ENDPOINTİ
-app.post('/api/register', async (req, res) => {
+// TÜM İLANLARI GETİR
+app.get('/api/ilanlar', async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
-    
-    // Email var mı kontrol
-    const varMi = await User.findOne({ email });
-    if (varMi) {
-      return res.status(400).json({ error: 'Bu email zaten kayıtlı' });
-    }
-
-    const user = new User({ name, email, phone, password });
-    await user.save();
-    
-    res.status(201).json({ 
-      message: 'Kayıt başarılı kral', 
-      user: { name: user.name, email: user.email } 
-    });
+    const ilanlar = await Ilan.find().sort({ createdAt: -1 });
+    console.log(`✅ ${ilanlar.length} ilan getirildi`);
+    res.json(ilanlar);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('HATA: İlanlar getirilemedi:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
-// LOGIN ENDPOINTİ - LAZIM OLUR
-app.post('/api/login', async (req, res) => {
+// YENİ İLAN EKLE - BUNU DÜZELTTİK
+app.post('/api/ilanlar', async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    console.log('Gelen veri:', req.body);
     
-    if (!user || user.password !== password) {
-      return res.status(401).json({ error: 'Email veya şifre hatalı' });
+    const { title, price } = req.body;
+    if (!title || !price) {
+      return res.status(400).json({ error: 'Başlık ve fiyat zorunlu' });
     }
-    
-    res.json({ 
-      message: 'Giriş başarılı', 
-      user: { name: user.name, email: user.email } 
+
+    const yeniIlan = new Ilan({
+      title: req.body.title,
+      price: req.body.price,
+      description: req.body.description || '',
+      category: req.body.category || 'Diğer',
+      imageUrl: req.body.imageUrl || ''
     });
+
+    const kaydedilenIlan = await yeniIlan.save();
+    console.log('BAŞARILI: İlan kaydedildi:', kaydedilenIlan.title);
+    res.status(201).json(kaydedilenIlan);
+    
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('HATA: İlan kaydedilemedi:', error);
+    res.status(500).json({ error: 'Server error: ' + error.message });
   }
 });
 
-// SERVER BAŞLAT
-const PORT = process.env.PORT || 10000;
+// İLAN SİL
+app.delete('/api/ilanlar/:id', async (req, res) => {
+  try {
+    await Ilan.findByIdAndDelete(req.params.id);
+    console.log('BAŞARILI: İlan silindi:', req.params.id);
+    res.json({ message: 'İlan silindi' });
+  } catch (error) {
+    console.error('HATA: İlan silinemedi:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 app.listen(PORT, () => {
-  console.log(`Server ${PORT} portunda çalışıyor kral`);
+  console.log(`🚀 Server ${PORT} portunda çalışıyor`);
 });
